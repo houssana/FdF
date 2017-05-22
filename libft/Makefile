@@ -6,7 +6,7 @@
 #    By: houssana <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/17 19:29:54 by houssana          #+#    #+#              #
-#    Updated: 2017/05/22 14:13:51 by houssana         ###   ########.fr        #
+#    Updated: 2017/05/22 14:42:30 by houssana         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ FLAGS=-Wall -Wextra -Werror -c
 FILES1=ft_{memset,bzero,memcpy,memccpy,memmove,memchr,memcmp,strlen,strdup,strcpy,strncpy,strcat,strncat,strlcat,strchr,strrchr,strstr,strnstr,strcmp,strncmp,atoi,isalpha,isdigit,isalnum,isascii,isprint,toupper,tolower}
 FILES2=ft_{memalloc,memdel,strnew,strdel,strclr,striter,striteri,strmap,strmapi,strequ,strnequ,strsub,strjoin,strtrim,strsplit,itoa,putchar,putstr,putendl,putnbr,putchar_fd,putstr_fd,putendl_fd,putnbr_fd}
 FILES3=ft_{lstnew,lstdelone,lstdel,lstadd,lstiter,lstmap}
-BONUS=ft_intlen_base
+BONUS={ft_intlen_base,get_next_line}
 
 all: $(NAME)
 
