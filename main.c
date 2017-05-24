@@ -69,19 +69,18 @@ int main(int argc, char **argv)
 	img_addr = malloc(sizeof(char));
 	mlx = mlx_init();
 	x = 0;
-	win = mlx_new_window(mlx, 10 * i + 100, 10 * j + 100, "mlx 42");
+	win = mlx_new_window(mlx, 10 * i, 10 * j, "mlx 42");
 	//	mlx_pixel_put(mlx, win, 200, 200, 0x00FFFFFF);
-	img = mlx_new_image(mlx, 10 * i + 100, 10 * j + 100);
+	img = mlx_new_image(mlx, 10 * i, 10 * j);
 	img_addr = mlx_get_data_addr(img, bits_per_pixel, size_line, endian);
 	while (i)
 	{
 		k = j;
-		while (k)
+		while (k--)
 		{		
-			*(img_addr + 0 + 1*(k * *size_line + i**bits_per_pixel)) = 255;
-			*(img_addr + 1+ 1*(k * *size_line + i**bits_per_pixel)) = 255;
-			*(img_addr + 2+ 1*(k * *size_line + i**bits_per_pixel)) = 255;
-			k--;
+			*(img_addr + 0 + 1*(k * 10 * *size_line + i**bits_per_pixel)) = 255;
+			*(img_addr + 1+ 1*(k * 10 * *size_line + i**bits_per_pixel)) = 255;
+			*(img_addr + 2+ 1*(k * 10 * *size_line + i**bits_per_pixel)) = 255;
 		}
 		i--;
 	}
@@ -94,7 +93,7 @@ int main(int argc, char **argv)
 	//printf("img : %s\n", img_addr);
 	//	}
 	printf("bits_per_pixel : %d\nsize_line : %d\nendian : %d\nimg : %s\n", *bits_per_pixel, *size_line, *endian, (img_addr));
-	mlx_put_image_to_window(mlx, win, img, 0, 0);
+	mlx_put_image_to_window(mlx, win, img, 50, 50);
 //	while (++x < 200)
 //	{
 //		y = 0;
