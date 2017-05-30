@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/10 13:52:42 by houssana          #+#    #+#             */
-/*   Updated: 2017/05/22 13:43:06 by houssana         ###   ########.fr       */
+/*   Updated: 2017/05/30 18:43:50 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 int my_key_funct(int keycode, void *param)
 {
@@ -24,7 +25,80 @@ int my_key_funct(int keycode, void *param)
 	return (0);
 }
 
-int main(int argc, char **argv)
+char		*ft_strjoin_free(char *s1, char *s2, int w)
+{
+	char	*s;
+	int		i;
+	int		j;
+
+	if (!s1 || !s2)
+		return (NULL);
+	i = ft_strlen(s1) + ft_strlen(s2);
+	s = (char *)malloc(sizeof(char) * (i + 1));
+	if (!s)
+		return (NULL);
+	s[i] = '\0';
+	j = -1;
+	while (s1[++j])
+		*(s++) = s1[j];
+	j = -1;
+	while (s2[++j])
+		*(s++) = s2[j];
+	if (w == 0 || w == 1)
+		free(s1);
+	if (w == 0 || w == 2)
+		free(s2);
+	return (s - i);
+}
+
+int		**parse(char *str)
+{
+	int		**r;
+	char	**s;
+	char	**tmp;
+	int		i;
+	int		j;
+	
+	i = 0;
+	s = ft_strsplit(str, '\n');
+	while (s[i])
+		i++;
+	r = (int **)malloc(sizeof(int *) * (i + 1));
+	i = -1;
+	while (s[++i])
+	{
+		j = 0;
+		tmp = ft_strsplit(s[i], ' ');
+		while (tmp[j])
+			j++;
+		r[i] = (int *)malloc(sizeof(int) * (j + 1));
+		j = -1;
+		while (tmp[++j])
+			r[i][j] = atoi(tmp[j]);
+		r[i][j] = -1;
+	}
+	r[i] = NULL;
+	return (r);
+}
+
+char	*to_str(char *f)
+{
+	int		fd;
+	char	*line;
+	char	*r;
+
+	fd = open(f, O_RDONLY);
+	r = ft_strnew(1);
+	while (get_next_line(fd, &line) > 0)
+	{
+		line = ft_strjoin_free(line, "\n", 1);
+		r = ft_strjoin_free(r, line, 2);
+	}
+	close(fd);
+	return (r);
+}
+
+int		main(int argc, char **argv)
 {
 	void	*mlx;
 	void	*win;
@@ -35,34 +109,24 @@ int main(int argc, char **argv)
 	int		*size_line;
 	char	*img_addr;
 	int		*endian;
-	char	*line;
-	int	i;
-	int	j;
-	int	k;
-	int	fd;
+	int		**k;
+	int		i;
+	int		j;
 
 	if (argc != 2)
 	{
 		return (0);
 	}
-	i = 0;
-	j = 0;
-	k = 0;
-	fd = open(argv[1], O_RDONLY);
-	while (get_next_line(fd, &line) > 0)
+	k = parse(to_str(argv[1]));
+	i = -1;
+	while (k[++i]) 
 	{
-		j++;
-		while (line[k] != '\0')
-		{
-			i++;
-			while (line[k] == ' ')
-				k++;
-			k += ft_intlen_base(ft_atoi(line), 10);	
-		}
-		free(line);
+		j = -1;
+		while (k[i][++j] >= 0)
+			ft_putnbr(k[i][j]);
+		ft_putchar('\n');
 	}
-
-	k = -1;
+/*	k = -1;
 	bits_per_pixel = malloc(sizeof(int));
 	size_line = malloc(sizeof(int));
 	endian = malloc(sizeof(int));
@@ -84,27 +148,11 @@ int main(int argc, char **argv)
 		}
 		i--;
 	}
-	//*(img_addr + 0) = 255;
-	//*(img_addr + 1) = 0;
-	//*(img_addr + 2) = 0;
-	//	while (++i <= 0)
-	//	{
-	//		*(img_addr + i) = 255;
-	//printf("img : %s\n", img_addr);
-	//	}
 	printf("bits_per_pixel : %d\nsize_line : %d\nendian : %d\nimg : %s\n", *bits_per_pixel, *size_line, *endian, (img_addr));
 	mlx_put_image_to_window(mlx, win, img, 50, 50);
-//	while (++x < 200)
-//	{
-//		y = 0;
-//		while (++y <= 200)
-//		{
-//			mlx_pixel_put(mlx, win, x, y, 0x00FFFFFF);
-//		}
-//	}
-//	mlx_key_hook(win, my_key_funct, 0);
+	//	mlx_key_hook(win, my_key_funct, 0);
 	mlx_loop(mlx);
-	return (0);
+*/	return (0);
 }
 
 //int main(int argc, char **argv)
