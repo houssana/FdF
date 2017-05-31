@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/10 13:52:42 by houssana          #+#    #+#             */
-/*   Updated: 2017/05/31 14:55:58 by houssana         ###   ########.fr       */
+/*   Updated: 2017/05/31 15:38:01 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,24 @@ void	paint_pixel(char *addr, char b, char g, char r)
 	*(addr + 2) = r;
 }
 
-void	link_pixels(int i, int j, int **k)
+void	link_pixels(t_p2 a, t_p2 b, int **k)
 {
 	
+}
+
+void	init_image(t_img *img)
+{
+	img->bits_per_pixel = malloc(sizeof(int));
+	img->size_line = malloc(sizeof(int));
+	img->img_addr = malloc(sizeof(char));
+	img->endian = malloc(sizeof(int));
 }
 
 int		main(int argc, char **argv)
 {
 	void	*mlx;
 	void	*win;
-	void	*img;
-	int		*bits_per_pixel;
-	int		*size_line;
-	char	*img_addr;
-	int		*endian;
+	t_img	*img;
 	int		**k;
 	int		i;
 	int		j;
@@ -62,28 +66,26 @@ int		main(int argc, char **argv)
 		j++;
 	ft_putnbr(i);
 	ft_putnbr(j);
-	bits_per_pixel = malloc(sizeof(int));
-	size_line = malloc(sizeof(int));
-	endian = malloc(sizeof(int));
-	img_addr = malloc(sizeof(char));
 	mlx = mlx_init();
 	win = mlx_new_window(mlx, 100 * j, 100 * i, "mlx 42");
 	//	mlx_pixel_put(mlx, win, 200, 200, 0x00FFFFFF);
-	img = mlx_new_image(mlx, 100 * j, 100 * i);
-	img_addr = mlx_get_data_addr(img, bits_per_pixel, size_line, endian);
+	img = ft_memalloc(sizeof(t_img));
+	img->img = mlx_new_image(mlx, 100 * j, 100 * i);
+	init_image(img);
+	img->img_addr = mlx_get_data_addr(img->img, img->bits_per_pixel, img->size_line, img->endian);
 	while (i--)
 	{
 		w = j;
 		while (w--)
 		{
 			if (k[i][w] == 0)
-				paint_pixel(img_addr + 100 * (i * (*size_line) + w * (*bits_per_pixel)), 255, 255, 255);
+				paint_pixel(img->img_addr + 100 * (i * *(img->size_line) + w * *(img->bits_per_pixel)), 255, 255, 255);
 			else
-				paint_pixel(img_addr + 100 * (i * (*size_line) + w * (*bits_per_pixel)) - k[i][w] * (*size_line), 0, 0, 255);
+				paint_pixel(img->img_addr + 100 * (i * *(img->size_line) + w * *(img->bits_per_pixel)) - k[i][w] * *(img->size_line), 0, 0, 255);
 		}
 	}
-	printf("bits_per_pixel : %d\nsize_line : %d\nendian : %d\nimg : %s\n", *bits_per_pixel, *size_line, *endian, (img_addr));
-	mlx_put_image_to_window(mlx, win, img, 50, 50);
+	printf("bits_per_pixel : %d\nsize_line : %d\nendian : %d\nimg : %s\n", *(img->bits_per_pixel), *(img->size_line), *(img->endian), (img->img_addr));
+	mlx_put_image_to_window(mlx, win, img->img, 50, 50);
 	//	mlx_key_hook(win, my_key_funct, 0);
 	mlx_loop(mlx);
 	return (0);
