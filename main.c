@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/10 13:52:42 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/03 16:33:37 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/03 17:20:42 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,27 +45,29 @@ void	link_pixels(t_p2 *a, t_p2 *b, int **k, t_img *img)
 {
 	t_p2	*a_sc;
 	t_p2	*b_sc;
-	t_p2	*pte;
 	double	p;
 	double	i;
+	int		t;
 
-	a_sc = new_p2(a->x * img->scale, a->y * img->scale - k[a->y][a->x]);
-	b_sc = new_p2(b->x * img->scale, b->y * img->scale - k[b->y][b->x]);
-	pte = new_p2(0, 0);	
-	p = (double)(b_sc->y - a_sc->y)/(double)(b_sc->x - a_sc->x);
-	if (a_sc->x != b_sc->x)
-		pte->x = ((b_sc->x - a_sc->x) / abs(b_sc->x - a_sc->x));
-	if (a_sc->y != b_sc->y)
-		pte->y = ((b_sc->y - a_sc->y) / abs(b_sc->y - a_sc->y));
+	if (a->x == b->x && a->y == b->y)
+		return;
+	a_sc = new_p2(a->x * img->scale + 0*k[a->y][a->x], a->y * img->scale - 1 * k[a->y][a->x]);
+	b_sc = new_p2(b->x * img->scale + 0*k[b->y][b->x], b->y * img->scale - 1 *k[b->y][b->x]);
+	t = (b_sc->y - a_sc->y) >= (b_sc->x - a_sc->x);
+	p = fmin(b_sc->y - a_sc->y, b_sc->x - a_sc->x)/fmax(b_sc->y - a_sc->y, b_sc->x - a_sc->x);
 	i = 0;
 	while (a_sc->x != b_sc->x || a_sc->y != b_sc->y)
 	{
 		i += p;
-		if (a_sc->x != b_sc->x)
+		if (!t && a_sc->x != b_sc->x)
 			a_sc->x += ((b_sc->x - a_sc->x) / abs(b_sc->x - a_sc->x));
-		if (a_sc->y != b_sc->y)
+		else
+			a_sc->x += (p >= 0) ? (int)floor(i) : (int)ceil(i);
+		if (t && a_sc->y != b_sc->y)
+			a_sc->y += ((b_sc->y - a_sc->y) / abs(b_sc->y - a_sc->y));
+		else
 			a_sc->y += (p >= 0) ? (int)floor(i) : (int)ceil(i);
-		if (i > 1 || i < -1)
+		if (i >= 1 || i <= -1)
 			i = 0;
 		if (a_sc->x != b_sc->x || a_sc->y != b_sc->y)
 			paint_pixel(img->img_addr + a_sc->y * *(img->size_line) + a_sc->x * *(img->bits_per_pixel) / 8, 255, 255, 255);
@@ -104,9 +106,9 @@ int		main(int argc, char **argv)
 	while (k[0][j] >= 0) 
 		j++;
 	mlx = mlx_init();
-	win = mlx_new_window(mlx, 100 * j, 100 * i, "mlx 42");
+	win = mlx_new_window(mlx, 50 * j, 50 * i, "mlx 42");
 	img = ft_memalloc(sizeof(t_img));
-	img->scale = 100;
+	img->scale = 50;
 	img->img = mlx_new_image(mlx, img->scale * j, img->scale * i);
 	init_image(img);
 	img->img_addr = mlx_get_data_addr(img->img, img->bits_per_pixel, img->size_line, img->endian);
@@ -123,24 +125,26 @@ int		main(int argc, char **argv)
 	}
 	a = new_p2(0, 0);
 	b = new_p2(0, 0);
-	while (a->x < 18)
+	while (a->x < 19)
 	{
 		a->y = 0;
 		while (a->y < 11)
 		{
-	//		b->x = a->x;
-	//		b->y = a->y + 1;
-	//		link_pixels(a, b, k, img);
+			b->x = a->x;
+			b->y = a->y + 1;
+			if (a->y < 10)
+				link_pixels(a, b, k, img);
 			b->x = a->x + 1;
 			b->y = a->y;
-			link_pixels(a, b, k, img);
+			if (a->x < 18)
+				link_pixels(a, b, k, img);
 			a->y = a->y + 1;
 		}
 		a->x = a->x + 1;
 	}
 //	link_pixels(a, b, img);
 	printf("bits_per_pixel : %d\nsize_line : %d\nendian : %d\nimg : %s\n", *(img->bits_per_pixel), *(img->size_line), *(img->endian), (img->img_addr));
-	mlx_put_image_to_window(mlx, win, img->img, 50, 50);
+	mlx_put_image_to_window(mlx, win, img->img, 25, 25);
 	//	mlx_key_hook(win, my_key_funct, 0);
 	mlx_loop(mlx);
 	return (0);
