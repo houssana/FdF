@@ -15,6 +15,8 @@
 #include <stdlib.h>
 #include "libft/libft.h"
 #include "libft/get_next_line.h"
+#include "libft/get_next_line.h"
+#include "fdf.h"
 
 char		*ft_strjoin_free(char *s1, char *s2, int w)
 {
@@ -42,33 +44,49 @@ char		*ft_strjoin_free(char *s1, char *s2, int w)
 	return (s - i);
 }
 
-int		**parse(char *str)
+t_p3	*new_p3(int x, int y, int z)
 {
-	int		**r;
+	t_p3	*p;
+
+	p = (t_p3*)malloc(sizeof(t_p3));
+	p->x = x;
+	p->y = y;
+	p->z = z;
+	return (p);
+}
+
+t_p3	**parse(char *str, t_p2 *res)
+{
+	t_p3	**r;
 	char	**s;
 	char	**tmp;
 	int		i;
 	int		j;
+	int		k;
 	
 	i = 0;
+	j = 0;
+	k = 0;
 	s = ft_strsplit(str, '\n');
 	while (s[i])
 		i++;
-	r = (int **)malloc(sizeof(int *) * (i + 1));
+	tmp = ft_strsplit(s[0], ' ');
+	while (tmp[j])
+		j++;
+	res->x = j;
+	res->y = i;
+	r = (t_p3**)malloc(sizeof(t_p3*) * (i * j + 1));
 	i = -1;
 	while (s[++i])
 	{
-		j = 0;
+		ft_putstr("ok\n");
 		tmp = ft_strsplit(s[i], ' ');
-		while (tmp[j])
-			j++;
-		r[i] = (int *)malloc(sizeof(int) * (j + 1));
 		j = -1;
 		while (tmp[++j])
-			r[i][j] = atoi(tmp[j]);
-		r[i][j] = -1;
+			r[k++] = new_p3(j, i, atoi(tmp[j]));
 	}
-	r[i] = NULL;
+	r[k] = NULL;
+	free(str);
 	return (r);
 }
 
@@ -88,5 +106,3 @@ char	*to_str(char *f)
 	close(fd);
 	return (r);
 }
-
-

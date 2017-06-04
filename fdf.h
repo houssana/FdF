@@ -14,7 +14,6 @@
 # define FDF_H
 
 char			*ft_strjoin_free(char *s1, char *s2, int w);
-int				**parse(char *str);
 char			*to_str(char *f);
 typedef struct	s_point2
 {
@@ -36,4 +35,5 @@ typedef struct	s_img
 	int		*endian;
 	int		scale;
 }				t_img;
+t_p3			**parse(char *str, t_p2 *res);
 #endif

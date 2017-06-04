@@ -24,13 +24,6 @@ int 	my_key_funct(int keycode, void *param)
 	return (0);
 }
 
-void	paint_pixel(char *addr, char b, char g, char r)
-{
-	*addr = b;
-	*(addr + 1) = g;
-	*(addr + 2) = r;
-}
-
 t_p2	*new_p2(int x, int y)
 {
 	t_p2	*p;
@@ -39,6 +32,43 @@ t_p2	*new_p2(int x, int y)
 	p->x = x;
 	p->y = y;
 	return (p);
+}
+
+t_p2	*proj_iso(t_p3	**k, int scale)
+{
+	int	tmp;
+	int	i;
+	t_p2	*min;
+	t_p2	*max;
+
+	min = new_p2(0, 0);
+	max = new_p2(0, 0);
+	i = -1;
+	while (k[++i])
+	{
+		tmp = k[i]->x;
+		k[i]->x = sqrt(2) / 2.0 * scale * (k[i]->x - k[i]->y);
+		k[i]->y = sqrt(2 / 3) * k[i]->z - 1 / sqrt(6) * scale * (tmp + k[i]->y);	
+		min->x = (min->x > k[i]->x) ? k[i]->x : min->x;
+		min->y = (min->y > k[i]->y) ? k[i]->y : min->y;
+		max->x = (max->x < k[i]->x) ? k[i]->x : max->x;
+		max->y = (max->y < k[i]->y) ? k[i]->y : max->y;
+	}
+	while (i--)
+	{
+		k[i]->x += -min->x;
+		k[i]->y += -min->y;
+	}
+	max->x = max->x - min->x + 1;
+	max->y = max->y - min->y + 1;
+	return (max);
+}
+
+void	paint_pixel(char *addr, char b, char g, char r)
+{
+	*addr = b;
+	*(addr + 1) = g;
+	*(addr + 2) = r;
 }
 
 void	link_pixels(t_p2 *a, t_p2 *b, int **k, t_img *img)
@@ -51,8 +81,10 @@ void	link_pixels(t_p2 *a, t_p2 *b, int **k, t_img *img)
 
 	if (a->x == b->x && a->y == b->y)
 		return;
-	a_sc = new_p2(a->x * img->scale + 0*k[a->y][a->x], a->y * img->scale - 1 * k[a->y][a->x]);
-	b_sc = new_p2(b->x * img->scale + 0*k[b->y][b->x], b->y * img->scale - 1 *k[b->y][b->x]);
+	//a_sc = new_p2(a->x * img->scale + 0*k[a->y][a->x], a->y * img->scale - 1 * k[a->y][a->x]);
+	//b_sc = new_p2(b->x * img->scale + 0*k[b->y][b->x], b->y * img->scale - 1 *k[b->y][b->x]);
+//	a_sc = proj_iso(a->x, a->y, k[a->y][a->x]);
+//	b_sc = proj_iso(b->x, b->y, k[b->y][b->x]);
 	t = (b_sc->y - a_sc->y) >= (b_sc->x - a_sc->x);
 	p = fmin(b_sc->y - a_sc->y, b_sc->x - a_sc->x)/fmax(b_sc->y - a_sc->y, b_sc->x - a_sc->x);
 	i = 0;
@@ -87,45 +119,53 @@ int		main(int argc, char **argv)
 	void	*mlx;
 	void	*win;
 	t_img	*img;
-	int		**k;
+	t_p3		**k;
 	int		i;
 	int		j;
 	int		w;
 	t_p2	*a;
 	t_p2	*b;
+	t_p2	*proj;
+	t_p2	*res;
 
 	if (argc != 2)
-	{
 		return (0);
-	}
-	k = parse(to_str(argv[1]));
-	i = 0;
+	res = new_p2(0, 0);
+	k = parse(to_str(argv[1]), res);
+	i = -1;
 	j = 0;
-	while (k[i]) 
-		i++;
-	while (k[0][j] >= 0) 
-		j++;
 	mlx = mlx_init();
-	win = mlx_new_window(mlx, 50 * j, 50 * i, "mlx 42");
 	img = ft_memalloc(sizeof(t_img));
 	img->scale = 50;
-	img->img = mlx_new_image(mlx, img->scale * j, img->scale * i);
+			ft_putstr("euh\n");
+			ft_putnbr(k[0]->x);
+			ft_putnbr(k[0]->y);
+			ft_putstr("euh\n");
+	res = proj_iso(k, img->scale);
+			ft_putstr("euh\n");
+			ft_putnbr(k[0]->x);
+			ft_putnbr(k[0]->y);
+			ft_putstr("euh\n");
+	win = mlx_new_window(mlx, res->x, res->y, "mlx 42");
+	img->img = mlx_new_image(mlx, res->x, res->y);
 	init_image(img);
 	img->img_addr = mlx_get_data_addr(img->img, img->bits_per_pixel, img->size_line, img->endian);
-	while (i--)
-	{
-		w = j;
-		while (w--)
+		while (k[++i])
 		{
-			if (k[i][w] == 0)
-				paint_pixel(img->img_addr + img->scale * (i * *(img->size_line) + w * *(img->bits_per_pixel) / 8), 0, 0, 255);
+//			proj = proj_iso(i, w, k[i][w]); 
+			ft_putstr("euh\n");
+			ft_putnbr(k[i]->x);
+			ft_putnbr(k[i]->y);
+			if (k[i]->z > 0)
+				paint_pixel(img->img_addr + 1 * (k[i]->y * *(img->size_line) + k[i]->x * *(img->bits_per_pixel) / 8), 0, 0, 255);
 			else
-				paint_pixel(img->img_addr + img->scale * (i * *(img->size_line) + w * *(img->bits_per_pixel) / 8) - k[i][w] * *(img->size_line), 255, 0, 255);
+				paint_pixel(img->img_addr + 1 * (k[i]->y * *(img->size_line) + k[i]->x * *(img->bits_per_pixel) / 8), 255, 255, 255);
+	//		free(proj);
 		}
-	}
+//	}
 	a = new_p2(0, 0);
 	b = new_p2(0, 0);
-	while (a->x < 19)
+	while (0 && a->x < 19)
 	{
 		a->y = 0;
 		while (a->y < 11)
