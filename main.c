@@ -71,7 +71,7 @@ void	paint_pixel(char *addr, char b, char g, char r)
 	*(addr + 2) = r;
 }
 
-void	link_pixels(t_p2 *a, t_p2 *b, t_img *img)
+void	link_pixels(t_p3 *a, t_p3 *b, t_img *img)
 {
 	t_p2	*a_sc;
 	t_p2	*b_sc;
@@ -82,7 +82,7 @@ void	link_pixels(t_p2 *a, t_p2 *b, t_img *img)
 	if (a->x == b->x && a->y == b->y)
 		return;
 	a_sc = new_p2(a->x, a->y);
-	b_sc = b;
+	b_sc = new_p2(b->x, b->y);
 	//a_sc = new_p2(a->x * img->scale + 0*k[a->y][a->x], a->y * img->scale - 1 * k[a->y][a->x]);
 	//b_sc = new_p2(b->x * img->scale + 0*k[b->y][b->x], b->y * img->scale - 1 *k[b->y][b->x]);
 	//	a_sc = proj_iso(a->x, a->y, k[a->y][a->x]);
@@ -129,10 +129,6 @@ int		main(int argc, char **argv)
 	t_p3		**k;
 	int		i;
 	int		j;
-	int		w;
-	t_p2	*a;
-	t_p2	*b;
-	t_p2	*proj;
 	t_p2	*res;
 
 	if (argc != 2)
@@ -140,7 +136,6 @@ int		main(int argc, char **argv)
 	res = new_p2(0, 0);
 	k = parse(to_str(argv[1]), res);
 	i = -1;
-	j = 0;
 	mlx = mlx_init();
 	img = ft_memalloc(sizeof(t_img));
 	img->scale = 50;
@@ -155,28 +150,7 @@ int		main(int argc, char **argv)
 			paint_pixel(img->img_addr + 1 * (k[i]->y * *(img->size_line) + k[i]->x * *(img->bits_per_pixel) / 8), 0, 0, 255);
 		else
 			paint_pixel(img->img_addr + 1 * (k[i]->y * *(img->size_line) + k[i]->x * *(img->bits_per_pixel) / 8), 255, 255, 255);
-		//		free(proj);
 	}
-	//	}
-a = new_p2(0, 0);
-b = new_p2(0, 0);
-while (0 && a->x < 19)
-{
-	a->y = 0;
-	while (a->y < 11)
-	{
-		b->x = a->x;
-		b->y = a->y + 1;
-		if (a->y < 10)
-			link_pixels(a, b, img);
-		b->x = a->x + 1;
-		b->y = a->y;
-		if (a->x < 18)
-			link_pixels(a, b, img);
-		a->y = a->y + 1;
-	}
-	a->x = a->x + 1;
-}
 		link_pixels(k[0], k[1], img);
 		link_pixels(k[19], k[20], img);
 j = -1;
