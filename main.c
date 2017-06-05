@@ -145,7 +145,7 @@ int		main(int argc, char **argv)
 	img = ft_memalloc(sizeof(t_img));
 	img->scale = 50;
 	res = proj_iso(k, img->scale);
-	win = mlx_new_window(mlx, res->x, res->y, "mlx 42");
+	win = mlx_new_window(mlx, res->x*1.2, res->y*1.2, "mlx 42");
 	img->img = mlx_new_image(mlx, res->x, res->y);
 	init_image(img);
 	img->img_addr = mlx_get_data_addr(img->img, img->bits_per_pixel, img->size_line, img->endian);
@@ -191,7 +191,7 @@ i = -1;
 	}
 }
 printf("bits_per_pixel : %d\nsize_line : %d\nendian : %d\nimg : %s\n", *(img->bits_per_pixel), *(img->size_line), *(img->endian), (img->img_addr));
-mlx_put_image_to_window(mlx, win, img->img, 0, 0);
+mlx_put_image_to_window(mlx, win, img->img, 0.1*res->x, 0.1*res->y);
 //	mlx_key_hook(win, my_key_funct, 0);
 mlx_loop(mlx);
 return (0);
