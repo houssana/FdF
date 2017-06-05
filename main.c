@@ -27,7 +27,7 @@ int 	my_key_funct(int keycode, void *param)
 t_p2	*new_p2(int x, int y)
 {
 	t_p2	*p;
-	
+
 	p = (t_p2 *)malloc(sizeof(t_p2));
 	p->x = x;
 	p->y = y;
@@ -47,8 +47,8 @@ t_p2	*proj_iso(t_p3	**k, int scale)
 	while (k[++i])
 	{
 		tmp = k[i]->x;
-		k[i]->x = sqrt(2) / 2.0 * scale * (k[i]->x - k[i]->y);
-		k[i]->y = sqrt(2 / 3) * k[i]->z - 1 / sqrt(6) * scale * (tmp + k[i]->y);	
+		k[i]->x = sqrt(2) / 2.0 * scale * (k[i]->x + k[i]->y);
+		k[i]->y = sqrt(2.0 / 3.0) * -1.5*k[i]->z - 1.0 / sqrt(6) * scale * (tmp - k[i]->y);	
 		min->x = (min->x > k[i]->x) ? k[i]->x : min->x;
 		min->y = (min->y > k[i]->y) ? k[i]->y : min->y;
 		max->x = (max->x < k[i]->x) ? k[i]->x : max->x;
@@ -71,7 +71,7 @@ void	paint_pixel(char *addr, char b, char g, char r)
 	*(addr + 2) = r;
 }
 
-void	link_pixels(t_p2 *a, t_p2 *b, int **k, t_img *img)
+void	link_pixels(t_p2 *a, t_p2 *b, t_img *img)
 {
 	t_p2	*a_sc;
 	t_p2	*b_sc;
@@ -81,10 +81,12 @@ void	link_pixels(t_p2 *a, t_p2 *b, int **k, t_img *img)
 
 	if (a->x == b->x && a->y == b->y)
 		return;
+	a_sc = new_p2(a->x, a->y);
+	b_sc = b;
 	//a_sc = new_p2(a->x * img->scale + 0*k[a->y][a->x], a->y * img->scale - 1 * k[a->y][a->x]);
 	//b_sc = new_p2(b->x * img->scale + 0*k[b->y][b->x], b->y * img->scale - 1 *k[b->y][b->x]);
-//	a_sc = proj_iso(a->x, a->y, k[a->y][a->x]);
-//	b_sc = proj_iso(b->x, b->y, k[b->y][b->x]);
+	//	a_sc = proj_iso(a->x, a->y, k[a->y][a->x]);
+	//	b_sc = proj_iso(b->x, b->y, k[b->y][b->x]);
 	t = (b_sc->y - a_sc->y) >= (b_sc->x - a_sc->x);
 	p = fmin(b_sc->y - a_sc->y, b_sc->x - a_sc->x)/fmax(b_sc->y - a_sc->y, b_sc->x - a_sc->x);
 	i = 0;
@@ -101,6 +103,11 @@ void	link_pixels(t_p2 *a, t_p2 *b, int **k, t_img *img)
 			a_sc->y += (p >= 0) ? (int)floor(i) : (int)ceil(i);
 		if (i >= 1 || i <= -1)
 			i = 0;
+		ft_putstr("blabla ");
+		ft_putnbr(a_sc->x);
+		ft_putstr(" ");
+		ft_putnbr(a_sc->y);
+		ft_putstr("\n");
 		if (a_sc->x != b_sc->x || a_sc->y != b_sc->y)
 			paint_pixel(img->img_addr + a_sc->y * *(img->size_line) + a_sc->x * *(img->bits_per_pixel) / 8, 255, 255, 255);
 	}
@@ -137,55 +144,53 @@ int		main(int argc, char **argv)
 	mlx = mlx_init();
 	img = ft_memalloc(sizeof(t_img));
 	img->scale = 50;
-			ft_putstr("euh\n");
-			ft_putnbr(k[0]->x);
-			ft_putnbr(k[0]->y);
-			ft_putstr("euh\n");
 	res = proj_iso(k, img->scale);
-			ft_putstr("euh\n");
-			ft_putnbr(k[0]->x);
-			ft_putnbr(k[0]->y);
-			ft_putstr("euh\n");
 	win = mlx_new_window(mlx, res->x, res->y, "mlx 42");
 	img->img = mlx_new_image(mlx, res->x, res->y);
 	init_image(img);
 	img->img_addr = mlx_get_data_addr(img->img, img->bits_per_pixel, img->size_line, img->endian);
-		while (k[++i])
-		{
-//			proj = proj_iso(i, w, k[i][w]); 
-			ft_putstr("euh\n");
-			ft_putnbr(k[i]->x);
-			ft_putnbr(k[i]->y);
-			if (k[i]->z > 0)
-				paint_pixel(img->img_addr + 1 * (k[i]->y * *(img->size_line) + k[i]->x * *(img->bits_per_pixel) / 8), 0, 0, 255);
-			else
-				paint_pixel(img->img_addr + 1 * (k[i]->y * *(img->size_line) + k[i]->x * *(img->bits_per_pixel) / 8), 255, 255, 255);
-	//		free(proj);
-		}
-//	}
-	a = new_p2(0, 0);
-	b = new_p2(0, 0);
-	while (0 && a->x < 19)
+	while (k[++i])
 	{
-		a->y = 0;
-		while (a->y < 11)
-		{
-			b->x = a->x;
-			b->y = a->y + 1;
-			if (a->y < 10)
-				link_pixels(a, b, k, img);
-			b->x = a->x + 1;
-			b->y = a->y;
-			if (a->x < 18)
-				link_pixels(a, b, k, img);
-			a->y = a->y + 1;
-		}
-		a->x = a->x + 1;
+		if (k[i]->z > 0)
+			paint_pixel(img->img_addr + 1 * (k[i]->y * *(img->size_line) + k[i]->x * *(img->bits_per_pixel) / 8), 0, 0, 255);
+		else
+			paint_pixel(img->img_addr + 1 * (k[i]->y * *(img->size_line) + k[i]->x * *(img->bits_per_pixel) / 8), 255, 255, 255);
+		//		free(proj);
 	}
-//	link_pixels(a, b, img);
-	printf("bits_per_pixel : %d\nsize_line : %d\nendian : %d\nimg : %s\n", *(img->bits_per_pixel), *(img->size_line), *(img->endian), (img->img_addr));
-	mlx_put_image_to_window(mlx, win, img->img, 25, 25);
-	//	mlx_key_hook(win, my_key_funct, 0);
-	mlx_loop(mlx);
-	return (0);
+	//	}
+a = new_p2(0, 0);
+b = new_p2(0, 0);
+while (0 && a->x < 19)
+{
+	a->y = 0;
+	while (a->y < 11)
+	{
+		b->x = a->x;
+		b->y = a->y + 1;
+		if (a->y < 10)
+			link_pixels(a, b, img);
+		b->x = a->x + 1;
+		b->y = a->y;
+		if (a->x < 18)
+			link_pixels(a, b, img);
+		a->y = a->y + 1;
+	}
+	a->x = a->x + 1;
+}
+j = -1;
+while ( ++j < 10)
+{
+i = -1;
+	while ( ++i < 18)
+	{
+		link_pixels(k[i + 19*j], k[i+19*j+1], img);
+		link_pixels(k[i + 19*j], k[i+19*j + 19], img);
+//		link_pixels(k[i], k[i+19], img);
+	}
+}
+printf("bits_per_pixel : %d\nsize_line : %d\nendian : %d\nimg : %s\n", *(img->bits_per_pixel), *(img->size_line), *(img->endian), (img->img_addr));
+mlx_put_image_to_window(mlx, win, img->img, 0, 0);
+//	mlx_key_hook(win, my_key_funct, 0);
+mlx_loop(mlx);
+return (0);
 }
