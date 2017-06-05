@@ -48,7 +48,7 @@ t_p2	*proj_iso(t_p3	**k, int scale)
 	{
 		tmp = k[i]->x;
 		k[i]->x = sqrt(2) / 2.0 * scale * (k[i]->x - k[i]->y);
-		k[i]->y = -sqrt(2.0 / 3.0) * +k[i]->z + 1.0 / sqrt(6) * scale * (tmp + k[i]->y);	
+		k[i]->y = -sqrt(2.0 / 3.0) * +10*k[i]->z + 1.0 / sqrt(6) * scale * (tmp + k[i]->y);	
 		min->x = (min->x > k[i]->x) ? k[i]->x : min->x;
 		min->y = (min->y > k[i]->y) ? k[i]->y : min->y;
 		max->x = (max->x < k[i]->x) ? k[i]->x : max->x;
@@ -75,7 +75,7 @@ void	link_pixels(t_p3 *a, t_p3 *b, t_img *img)
 {
 	t_p2	*a_sc;
 	t_p2	*b_sc;
-	double	p;
+	float	p;
 	double	i;
 	int		t;
 
@@ -83,12 +83,8 @@ void	link_pixels(t_p3 *a, t_p3 *b, t_img *img)
 		return;
 	a_sc = new_p2(a->x, a->y);
 	b_sc = new_p2(b->x, b->y);
-	//a_sc = new_p2(a->x * img->scale + 0*k[a->y][a->x], a->y * img->scale - 1 * k[a->y][a->x]);
-	//b_sc = new_p2(b->x * img->scale + 0*k[b->y][b->x], b->y * img->scale - 1 *k[b->y][b->x]);
-	//	a_sc = proj_iso(a->x, a->y, k[a->y][a->x]);
-	//	b_sc = proj_iso(b->x, b->y, k[b->y][b->x]);
-	t = (b_sc->y - a_sc->y) >= (b_sc->x - a_sc->x);
-	p = fmin(b_sc->y - a_sc->y, b_sc->x - a_sc->x)/fmax(b_sc->y - a_sc->y, b_sc->x - a_sc->x);
+	t = abs(b_sc->y - a_sc->y) >= abs(b_sc->x - a_sc->x);
+	p = (t) ? (double)(b_sc->x - a_sc->x)/(double)(b_sc->y - a_sc->y) :(double)(b_sc->y - a_sc->y)/(double)(b_sc->x - a_sc->x);
 	i = 0;
 	while (a_sc->x != b_sc->x || a_sc->y != b_sc->y)
 	{
@@ -96,18 +92,15 @@ void	link_pixels(t_p3 *a, t_p3 *b, t_img *img)
 		if (!t && a_sc->x != b_sc->x)
 			a_sc->x += ((b_sc->x - a_sc->x) / abs(b_sc->x - a_sc->x));
 		else
-			a_sc->x += (p >= 0) ? (int)floor(i) : (int)ceil(i);
+			a_sc->x += (a_sc->x < b_sc->x) ? (int)fabs(round(i)) : -(int)fabs(round(i));
 		if (t && a_sc->y != b_sc->y)
 			a_sc->y += ((b_sc->y - a_sc->y) / abs(b_sc->y - a_sc->y));
 		else
-			a_sc->y += (p >= 0) ? (int)floor(i) : (int)ceil(i);
-		if (i >= 1 || i <= -1)
-			i = 0;
-		ft_putstr("blabla ");
-		ft_putnbr(a_sc->x);
-		ft_putstr(" ");
-		ft_putnbr(a_sc->y);
-		ft_putstr("\n");
+			a_sc->y += (a_sc->y < b_sc->y) ? (int)fabs(round(i)) : -(int)fabs(round(i));
+		if (i >= 0.5)
+			i -= 1;
+		else if (i <= -0.5)
+			i += 1;
 		if (a_sc->x != b_sc->x || a_sc->y != b_sc->y)
 			paint_pixel(img->img_addr + a_sc->y * *(img->size_line) + a_sc->x * *(img->bits_per_pixel) / 8, 255, 255, 255);
 	}
@@ -151,16 +144,16 @@ int		main(int argc, char **argv)
 		else
 			paint_pixel(img->img_addr + 1 * (k[i]->y * *(img->size_line) + k[i]->x * *(img->bits_per_pixel) / 8), 255, 255, 255);
 	}
-		link_pixels(k[0], k[1], img);
-		link_pixels(k[19], k[20], img);
 j = -1;
-while (0 && ++j < 10)
+while (++j < 11)
 {
 i = -1;
-	while ( ++i < 18)
+	while ( ++i < 19)
 	{
-		link_pixels(k[i + 19*j], k[i+19*j+1], img);
-		link_pixels(k[i + 19*j], k[i+19*j + 19], img);
+		if (i < 18)
+			link_pixels(k[i + 19*j], k[i+19*j+1], img);
+		if (j < 10)
+			link_pixels(k[i + 19*j], k[i+19*j + 19], img);
 //		link_pixels(k[i], k[i+19], img);
 	}
 }
