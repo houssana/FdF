@@ -47,8 +47,8 @@ t_p2	*proj_iso(t_p3	**k, int scale)
 	while (k[++i])
 	{
 		tmp = k[i]->x;
-		k[i]->x = sqrt(2) / 2.0 * scale * (k[i]->x + k[i]->y);
-		k[i]->y = sqrt(2.0 / 3.0) * -1.5*k[i]->z - 1.0 / sqrt(6) * scale * (tmp - k[i]->y);	
+		k[i]->x = sqrt(2) / 2.0 * scale * (k[i]->x - k[i]->y);
+		k[i]->y = -sqrt(2.0 / 3.0) * +k[i]->z + 1.0 / sqrt(6) * scale * (tmp + k[i]->y);	
 		min->x = (min->x > k[i]->x) ? k[i]->x : min->x;
 		min->y = (min->y > k[i]->y) ? k[i]->y : min->y;
 		max->x = (max->x < k[i]->x) ? k[i]->x : max->x;
@@ -177,8 +177,10 @@ while (0 && a->x < 19)
 	}
 	a->x = a->x + 1;
 }
+		link_pixels(k[0], k[1], img);
+		link_pixels(k[19], k[20], img);
 j = -1;
-while ( ++j < 10)
+while (0 && ++j < 10)
 {
 i = -1;
 	while ( ++i < 18)
