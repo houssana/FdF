@@ -6,7 +6,7 @@
 #    By: houssana <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/17 19:29:54 by houssana          #+#    #+#              #
-#    Updated: 2017/05/22 14:42:30 by houssana         ###   ########.fr        #
+#    Updated: 2017/06/06 16:48:15 by houssana         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ BONUS={ft_intlen_base,get_next_line}
 all: $(NAME)
 
 $(NAME):
-	gcc $(FLAGS) $(FILES1).c $(FILES2).c $(FILES3).c $(BONUS).c
+	@ gcc $(FLAGS) $(FILES1).c $(FILES2).c $(FILES3).c $(BONUS).c
 	ar rc $(NAME) $(FILES1).o $(FILES2).o $(FILES3).o $(BONUS).o
 	ranlib $(NAME)
 
