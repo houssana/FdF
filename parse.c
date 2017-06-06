@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/31 13:27:22 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/06 15:18:18 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/06 15:57:05 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_p3	**parse(char *str, t_p2 *res)
 	int		i;
 	int		j;
 	int		k;
-	
+
 	i = 0;
 	j = 0;
 	k = 0;
@@ -62,8 +62,8 @@ t_p3	**parse(char *str, t_p2 *res)
 	tmp = ft_strsplit(s[0], ' ');
 	while (tmp[j])
 	{
-		j++;
 		free(tmp[j]);
+		j++;
 	}
 	free(tmp);
 	res->x = j;

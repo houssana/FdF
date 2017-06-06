@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/10 13:52:42 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/06 15:14:18 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/06 15:58:18 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int 	my_key_funct(int keycode, void *param)
 		free(ptr->img->bpp);
 		free(ptr->img->sl);
 		free(ptr->img->e);
-//		free(ptr->img->img_addr);
 		free(ptr->img);
 		free(ptr);
 		while (1)
@@ -73,6 +72,7 @@ t_p2	*proj_iso(t_p3	**k, int scale)
 	}
 	max->x = max->x - min->x + 1;
 	max->y = max->y - min->y + 1;
+	free(min);
 	return (max);
 }
 
@@ -124,7 +124,6 @@ void	init_image(t_img *img)
 {
 	img->bpp = malloc(sizeof(int));
 	img->sl = malloc(sizeof(int));
-//	img->img_addr = malloc(sizeof(char));
 	img->e = malloc(sizeof(int));
 }
 
@@ -139,10 +138,9 @@ int		main(int argc, char **argv)
 
 	if (argc != 2)
 		return (0);
-	ptr = (t_ptr*)malloc(sizeof(t_ptr));
-	res = new_p2(0, 0);
 	res2 = new_p2(0, 0);
 	k = parse(to_str(argv[1]), res2);
+	ptr = (t_ptr*)malloc(sizeof(t_ptr));
 	i = -1;
 	ptr->mlx = mlx_init();
 	ptr->img = ft_memalloc(sizeof(t_img));
@@ -183,5 +181,4 @@ free(k);
 	mlx_expose_hook(ptr->win, my_key_funct, ptr);
 mlx_loop(ptr->mlx);
 return (0);
-		free(ptr->img->img_addr);
 }
