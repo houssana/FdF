@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/31 13:27:22 by houssana          #+#    #+#             */
-/*   Updated: 2017/05/31 13:40:49 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/06 15:18:18 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,6 @@ char		*ft_strjoin_free(char *s1, char *s2, int w)
 	return (s - i);
 }
 
-t_p3	*new_p3(int x, int y, int z)
-{
-	t_p3	*p;
-
-	p = (t_p3*)malloc(sizeof(t_p3));
-	p->x = x;
-	p->y = y;
-	p->z = z;
-	return (p);
-}
-
 t_p3	**parse(char *str, t_p2 *res)
 {
 	t_p3	**r;
@@ -72,21 +61,30 @@ t_p3	**parse(char *str, t_p2 *res)
 		i++;
 	tmp = ft_strsplit(s[0], ' ');
 	while (tmp[j])
+	{
 		j++;
+		free(tmp[j]);
+	}
+	free(tmp);
 	res->x = j;
 	res->y = i;
 	r = (t_p3**)malloc(sizeof(t_p3*) * (i * j + 1));
 	i = -1;
 	while (s[++i])
 	{
-		ft_putstr("ok\n");
 		tmp = ft_strsplit(s[i], ' ');
 		j = -1;
 		while (tmp[++j])
+		{
 			r[k++] = new_p3(j, i, atoi(tmp[j]));
+			free(tmp[j]);
+		}
+		free(tmp);
+		free(s[i]);
 	}
 	r[k] = NULL;
 	free(str);
+	free(s);
 	return (r);
 }
 
@@ -101,7 +99,7 @@ char	*to_str(char *f)
 	while (get_next_line(fd, &line) > 0)
 	{
 		line = ft_strjoin_free(line, "\n", 1);
-		r = ft_strjoin_free(r, line, 2);
+		r = ft_strjoin_free(r, line, 0);
 	}
 	close(fd);
 	return (r);
