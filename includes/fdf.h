@@ -49,4 +49,5 @@ t_p2	*new_p2(int x, int y);
 t_p3	*new_p3(int x, int y, int z);
 void	init_image(t_img *img);	
 void	draw_img(t_ptr *ptr);	
+float	diff(t_p2 *a, t_p2 *b, int d);
 #endif

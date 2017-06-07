@@ -33,3 +33,8 @@ t_p3	*new_p3(int x, int y, int z)
 	p->z = z;
 	return (p);
 }
+
+float	diff(t_p2 *a, t_p2 *b, int d)
+{
+	return ((d) ? b->y - a->y : b->x - a->x);
+}

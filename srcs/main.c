@@ -74,34 +74,35 @@ t_p2	*proj_iso(t_p3	**tab, int scale)
 	return (max);
 }
 
-int		main(int argc, char **argv)
+void	init_ptr(t_ptr *ptr, char **argv)
 {
-	int		i;
-	int		j;
-	t_ptr	*ptr;
-	t_p2	*res;
-//	t_p2	*res2;
-
-	if (argc != 2)
-		return (0);
-	//res2 = new_p2(0, 0);
-	ptr = (t_ptr*)malloc(sizeof(t_ptr));
 	ptr->img = ft_memalloc(sizeof(t_img));
 	init_image(ptr->img);
 	ptr->img->res = new_p2(0, 0);
 	ptr->tab = parse(to_str(argv[1]), ptr->img->res);
-	i = -1;
 	ptr->mlx = mlx_init();
 	ptr->img->scl = 50;
-	res = proj_iso(ptr->tab, ptr->img->scl);
-	ptr->win = mlx_new_window(ptr->mlx, res->x*1.2, res->y*1.2, "mlx 42");
-	ptr->img->img = mlx_new_image(ptr->mlx, res->x, res->y);
+	ptr->img->s_res = proj_iso(ptr->tab, ptr->img->scl);
+	ptr->win = mlx_new_window(ptr->mlx, ptr->img->s_res->x*1.2, ptr->img->s_res->y*1.2, "mlx 42");
+	ptr->img->img = mlx_new_image(ptr->mlx, ptr->img->s_res->x, ptr->img->s_res->y);
 	ptr->img->img_addr = mlx_get_data_addr(ptr->img->img, ptr->img->bpp, ptr->img->sl, ptr->img->e);
+	
+}
+
+int		main(int argc, char **argv)
+{
+	int		i;
+	t_ptr	*ptr;
+
+	if (argc != 2)
+		return (0);
+	ptr = (t_ptr*)malloc(sizeof(t_ptr));
+	init_ptr(ptr, argv);
 	draw_img(ptr);
 //	//printf("bits_per_pixel : %d\nsize_line : %d\nendian : %d\nimg : %s\n", *(img->bpp), *(img->sl), *(img->e), (img->img_addr));
-	mlx_put_image_to_window(ptr->mlx, ptr->win, ptr->img->img, 0.1*res->x, 0.1*res->y);
-	free(res);
-//	free(res2);
+	mlx_put_image_to_window(ptr->mlx, ptr->win, ptr->img->img, 0.1*ptr->img->s_res->x, 0.1*ptr->img->s_res->y);
+	free(ptr->img->s_res);
+	free(ptr->img->res);
 	i = -1;
 	while (ptr->tab[++i])
 		free(ptr->tab[i]);
