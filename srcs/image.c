@@ -3,18 +3,11 @@
 #include <stdlib.h>
 #include <math.h>
 
-void	init_image(t_img *img)
-{
-	img->bpp = malloc(sizeof(int));
-	img->sl = malloc(sizeof(int));
-	img->e = malloc(sizeof(int));
-}
-
 void	paint_pixel(t_img *img, t_p2 *a, char b, char g, char r)
 {
 	char	*addr;
 
-	addr = img->img_addr + a->y * *(img->sl) + a->x * *(img->bpp) / 8;
+	addr = img->i_a + a->y * *(img->sl) + a->x * *(img->bpp) / 8;
 	*(addr + 0) = b;
 	*(addr + 1) = g;
 	*(addr + 2) = r;
@@ -50,7 +43,7 @@ void	link_pix(t_p3 *a, t_p3 *b, t_img *img)
 	free(d);
 }
 
-void	draw_img(t_ptr *ptr)
+void	draw_img(t_ptr *p)
 {
 	int		i;
 	int		j;
@@ -58,17 +51,17 @@ void	draw_img(t_ptr *ptr)
 	t_p3	**t;
 
 	j = -1;
-	r = new_p2(ptr->img->res->x, ptr->img->res->y);
-	t = ptr->tab;
-	while (++j < ptr->img->res->y)
+	r = new_p2(p->r->x, p->r->y);
+	t = p->t;
+	while (++j < p->r->y)
 	{
 		i = -1;
-		while ( ++i < ptr->img->res->x)
+		while ( ++i < p->r->x)
 		{
 			if (i < r->x - 1)
-				link_pix(t[i + r->x * j], t[i + r->x * j + 1], ptr->img);
+				link_pix(t[i + r->x * j], t[i + r->x * j + 1], p->i);
 			if (j < r->y - 1)
-				link_pix(t[i + r->x * j], t[i + r->x * j + r->x], ptr->img);
+				link_pix(t[i + r->x * j], t[i + r->x * j + r->x], p->i);
 		}
 	}
 	free(r);

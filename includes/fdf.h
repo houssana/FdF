@@ -28,21 +28,21 @@ typedef struct	s_point3
 }				t_p3;
 typedef struct	s_img
 {
-	void	*img;
-	char	*img_addr;
+	void	*i;
+	char	*i_a;
 	int		*bpp;
 	int		*sl;
 	int		*e;
 	int		scl;
-	t_p2	*res;
-	t_p2	*s_res;
 }				t_img;
 typedef struct	s_pointeur
 {
-	void	*mlx;
-	void	*win;
-	t_img	*img;
-	t_p3	**tab;
+	void	*m;
+	void	*w;
+	t_img	*i;
+	t_p3	**t;
+	t_p2	*r;
+	t_p2	*sr;
 }				t_ptr;
 t_p3			**parse(char *str, t_p2 *res);
 t_p2	*new_p2(int x, int y);
@@ -50,4 +50,5 @@ t_p3	*new_p3(int x, int y, int z);
 void	init_image(t_img *img);	
 void	draw_img(t_ptr *ptr);	
 float	diff(t_p2 *a, t_p2 *b, int d);
+t_p2	*proj_iso(t_p3	**t, int s);
 #endif
