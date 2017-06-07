@@ -74,102 +74,34 @@ t_p2	*proj_iso(t_p3	**tab, int scale)
 	return (max);
 }
 
-void	paint_pixel(char *addr, char b, char g, char r)
-{
-	*addr = b;
-	*(addr + 1) = g;
-	*(addr + 2) = r;
-}
-
-void	link_pixels(t_p3 *a, t_p3 *b, t_img *img)
-{
-	t_p2	*a_sc;
-	t_p2	*b_sc;
-	float	p;
-	double	i;
-	int		t;
-
-	if (a->x == b->x && a->y == b->y)
-		return;
-	a_sc = new_p2(a->x, a->y);
-	b_sc = new_p2(b->x, b->y);
-	t = abs(b_sc->y - a_sc->y) >= abs(b_sc->x - a_sc->x);
-	p = (t) ? (double)(b_sc->x - a_sc->x)/(double)(b_sc->y - a_sc->y) :(double)(b_sc->y - a_sc->y)/(double)(b_sc->x - a_sc->x);
-	i = 0;
-	while (a_sc->x != b_sc->x || a_sc->y != b_sc->y)
-	{
-		i += p;
-		if (!t && a_sc->x != b_sc->x)
-			a_sc->x += ((b_sc->x - a_sc->x) / abs(b_sc->x - a_sc->x));
-		else
-			a_sc->x += (a_sc->x < b_sc->x) ? (int)fabs(round(i)) : -(int)fabs(round(i));
-		if (t && a_sc->y != b_sc->y)
-			a_sc->y += ((b_sc->y - a_sc->y) / abs(b_sc->y - a_sc->y));
-		else
-			a_sc->y += (a_sc->y < b_sc->y) ? (int)fabs(round(i)) : -(int)fabs(round(i));
-		if (i >= 0.5)
-			i -= 1;
-		else if (i <= -0.5)
-			i += 1;
-		if (a_sc->x != b_sc->x || a_sc->y != b_sc->y)
-			paint_pixel(img->img_addr + a_sc->y * *(img->sl) + a_sc->x * *(img->bpp) / 8, 255, 255, 255);
-	}
-	free(a_sc);
-	free(b_sc);
-}
-
-void	init_image(t_img *img)
-{
-	img->bpp = malloc(sizeof(int));
-	img->sl = malloc(sizeof(int));
-	img->e = malloc(sizeof(int));
-}
-
 int		main(int argc, char **argv)
 {
 	int		i;
 	int		j;
 	t_ptr	*ptr;
 	t_p2	*res;
-	t_p2	*res2;
+//	t_p2	*res2;
 
 	if (argc != 2)
 		return (0);
-	res2 = new_p2(0, 0);
+	//res2 = new_p2(0, 0);
 	ptr = (t_ptr*)malloc(sizeof(t_ptr));
-	ptr->tab = parse(to_str(argv[1]), res2);
+	ptr->img = ft_memalloc(sizeof(t_img));
+	init_image(ptr->img);
+	ptr->img->res = new_p2(0, 0);
+	ptr->tab = parse(to_str(argv[1]), ptr->img->res);
 	i = -1;
 	ptr->mlx = mlx_init();
-	ptr->img = ft_memalloc(sizeof(t_img));
 	ptr->img->scl = 50;
 	res = proj_iso(ptr->tab, ptr->img->scl);
 	ptr->win = mlx_new_window(ptr->mlx, res->x*1.2, res->y*1.2, "mlx 42");
 	ptr->img->img = mlx_new_image(ptr->mlx, res->x, res->y);
-	init_image(ptr->img);
 	ptr->img->img_addr = mlx_get_data_addr(ptr->img->img, ptr->img->bpp, ptr->img->sl, ptr->img->e);
-	while (ptr->tab[++i])
-	{
-		if (ptr->tab[i]->z > 0)
-			paint_pixel(ptr->img->img_addr + 1 * (ptr->tab[i]->y * *(ptr->img->sl) + ptr->tab[i]->x * *(ptr->img->bpp) / 8), 0, 0, 255);
-		else
-			paint_pixel(ptr->img->img_addr + 1 * (ptr->tab[i]->y * *(ptr->img->sl) + ptr->tab[i]->x * *(ptr->img->bpp) / 8), 255, 255, 255);
-	}
-	j = -1;
-	while (++j < res2->y)
-	{
-		i = -1;
-		while ( ++i < res2->x)
-		{
-			if (i < res2->x - 1)
-				link_pixels(ptr->tab[i + res2->x*j], ptr->tab[i+res2->x*j+1], ptr->img);
-			if (j < res2->y - 1)
-				link_pixels(ptr->tab[i + res2->x*j], ptr->tab[i+res2->x*j + res2->x], ptr->img);
-		}
-	}
-	//printf("bits_per_pixel : %d\nsize_line : %d\nendian : %d\nimg : %s\n", *(img->bpp), *(img->sl), *(img->e), (img->img_addr));
+	draw_img(ptr);
+//	//printf("bits_per_pixel : %d\nsize_line : %d\nendian : %d\nimg : %s\n", *(img->bpp), *(img->sl), *(img->e), (img->img_addr));
 	mlx_put_image_to_window(ptr->mlx, ptr->win, ptr->img->img, 0.1*res->x, 0.1*res->y);
 	free(res);
-	free(res2);
+//	free(res2);
 	i = -1;
 	while (ptr->tab[++i])
 		free(ptr->tab[i]);

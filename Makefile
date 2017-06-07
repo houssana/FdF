@@ -13,14 +13,13 @@
 NAME =fdf
 SRC =srcs/
 INCL =-I includes/ -I libft/
-SRC_FILES ={main,parse,points}
+SRC_FILES =*.c
 
 all: $(NAME)
 
 $(NAME):
-	 make -C libft/
-	 cc -o $(NAME) $(SRC)$(SRC_FILES).c libft/libft.a $(INCL) \
-		 -lmlx -lm -framework OpenGL -framework AppKit
+	make -C libft/
+	gcc -o $(NAME) $(SRC)*.c libft/libft.a $(INCL) -L/usr/X11/lib -lmlx -lXext -lX11 -lm
 
 clean:
 	make -C libft/ clean

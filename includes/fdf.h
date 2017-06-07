@@ -17,14 +17,14 @@ char			*ft_strjoin_free(char *s1, char *s2, int w);
 char			*to_str(char *f);
 typedef struct	s_point2
 {
-	int x;
-	int y;
+	float x;
+	float y;
 }				t_p2;
 typedef struct	s_point3
 {
-	int x;
-	int y;
-	int z;
+	float x;
+	float y;
+	float z;
 }				t_p3;
 typedef struct	s_img
 {
@@ -34,6 +34,8 @@ typedef struct	s_img
 	int		*sl;
 	int		*e;
 	int		scl;
+	t_p2	*res;
+	t_p2	*s_res;
 }				t_img;
 typedef struct	s_pointeur
 {
@@ -43,6 +45,8 @@ typedef struct	s_pointeur
 	t_p3	**tab;
 }				t_ptr;
 t_p3			**parse(char *str, t_p2 *res);
-t_p2	*new_p2(int x, int y);
-t_p3	*new_p3(int x, int y, int z);
+t_p2	*new_p2(float x, float y);
+t_p3	*new_p3(float x, float y, float z);
+void	init_image(t_img *img);	
+void	draw_img(t_ptr *ptr);	
 #endif
