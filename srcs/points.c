@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include "fdf.h"
 
-t_p2	*new_p2(float x, float y)
+t_p2	*new_p2(int x, int y)
 {
 	t_p2	*p;
 
@@ -23,7 +23,7 @@ t_p2	*new_p2(float x, float y)
 	return (p);
 }
 
-t_p3	*new_p3(float x, float y, float z)
+t_p3	*new_p3(int x, int y, int z)
 {
 	t_p3	*p;
 

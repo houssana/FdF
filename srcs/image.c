@@ -14,7 +14,7 @@ void	paint_pixel(t_img *img, t_p2 *a, char b, char g, char r)
 {
 	char	*addr;
 
-	addr = img->img_addr + (int)a->y * *(img->sl) + (int)a->x * *(img->bpp) / 8;
+	addr = img->img_addr + a->y * *(img->sl) + a->x * *(img->bpp) / 8;
 	*(addr + 0) = b;
 	*(addr + 1) = g;
 	*(addr + 2) = r;
@@ -39,13 +39,11 @@ void	link_pixels(t_p3 *a, t_p3 *b, t_img *img)
 		if (!t)
 			a_sc->x += ((b_sc->x - a_sc->x) / abs(b_sc->x - a_sc->x));
 		else
-			a_sc->x = round(a_sc->x + p);
-			//a_sc->x += (a_sc->x < b_sc->x) ? (int)fabs(round(i)) : -(int)fabs(round(i));
+			a_sc->x += (a_sc->x < b_sc->x) ? (int)fabs(round(i)) : -(int)fabs(round(i));
 		if (t)
 			a_sc->y += ((b_sc->y - a_sc->y) / abs(b_sc->y - a_sc->y));
 		else
-			a_sc->y = round(a_sc->y + p);
-			//a_sc->y += (a_sc->y < b_sc->y) ? (int)fabs(round(i)) : -(int)fabs(round(i));
+			a_sc->y += (a_sc->y < b_sc->y) ? (int)fabs(round(i)) : -(int)fabs(round(i));
 		i = (fabs(i) >= 0.5) ? i - round(i) : i;
 		paint_pixel(img, a_sc, 255, 255, 255);
 	}
