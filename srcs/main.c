@@ -52,7 +52,7 @@ void	init_ptr(t_ptr *p, char **argv)
 	p->r = new_p2(0, 0);
 	p->t = parse(to_str(argv[1]), p->r);
 	p->m = mlx_init();
-	p->i->scl = 50;
+	p->i->scl = 25;
 	p->sr = proj_iso(p->t, p->i->scl);
 	p->w = mlx_new_window(p->m, p->sr->x*1.2, p->sr->y*1.2, "mlx 42");
 	p->i->i = mlx_new_image(p->m, p->sr->x, p->sr->y);

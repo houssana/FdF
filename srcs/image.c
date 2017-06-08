@@ -3,40 +3,55 @@
 #include <stdlib.h>
 #include <math.h>
 
-void	paint_pixel(t_img *img, t_p2 *a, char b, char g, char r)
+void	paint_pixel(t_img *img, t_p3 *a, char b, char g, char r)
 {
 	char	*addr;
 
 	addr = img->i_a + a->y * *(img->sl) + a->x * *(img->bpp) / 8;
 	*(addr + 0) = b;
-	*(addr + 1) = g;
-	*(addr + 2) = r;
+	*(addr + 1) = g - 20 * a->z;
+	*(addr + 2) = r - 20 * a->z;
+}
+
+void	interpolate(t_p3 *c, t_p3 *d, float p, int t, float z)
+{
+	static float	i = 0;
+	static float	alt = 0;
+
+	i = (fabs(i) >= 0.5) ? i + p - round(i) : i + p;
+	alt = (alt >= 0.5) ? alt + z - round(alt) : alt + z;
+	if (!t)
+		c->x += ((d->x - c->x) / abs(d->x - c->x));
+	else
+		c->x += (c->x < d->x) ? (int)fabs(round(i)) : -(int)fabs(round(i));
+	if (t)
+		c->y += ((d->y - c->y) / abs(d->y - c->y));
+	else
+		c->y += (c->y < d->y) ? (int)fabs(round(i)) : -(int)fabs(round(i));
+	c->z += (c->z < d->z) ? (int)fabs(round(alt)) : -(int)fabs(round(alt));
+	if (!diff(c, d, 0) && !diff(c, d, 1))
+	{
+		i = 0;
+		alt = 0;
+	}
 }
 
 void	link_pix(t_p3 *a, t_p3 *b, t_img *img)
 {
-	t_p2	*c;
-	t_p2	*d;
+	t_p3	*c;
+	t_p3	*d;
 	float	p;
-	float	i;
+	float	z;
 	int		t;
 
-	c = new_p2(a->x, a->y);
-	d = new_p2(b->x, b->y);
+	c = new_p3(a->x, a->y, a->z);
+	d = new_p3(b->x, b->y, b->z);
 	t = abs(d->y - c->y) >= abs(d->x - c->x);
 	p = (t) ? (diff(c, d, 0) / diff(c, d, 1)) : (diff(c, d, 1) / diff(c, d, 0));
-	i = 0;
+	z = (t) ? (diff(c, d, 2) / diff(c, d, 1)) : (diff(c, d, 2) / diff(c, d, 0));
 	while (c->x != d->x || c->y != d->y)
 	{
-		i = (fabs(i) >= 0.5) ? i + p - round(i) : i + p;
-		if (!t)
-			c->x += ((d->x - c->x) / abs(d->x - c->x));
-		else
-			c->x += (c->x < d->x) ? (int)fabs(round(i)) : -(int)fabs(round(i));
-		if (t)
-			c->y += ((d->y - c->y) / abs(d->y - c->y));
-		else
-			c->y += (c->y < d->y) ? (int)fabs(round(i)) : -(int)fabs(round(i));
+		interpolate(c, d, p, t, fabs(z));
 		paint_pixel(img, c, 255, 255, 255);
 	}
 	free(c);

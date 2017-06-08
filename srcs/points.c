@@ -35,9 +35,14 @@ t_p3	*new_p3(int x, int y, int z)
 	return (p);
 }
 
-float	diff(t_p2 *a, t_p2 *b, int d)
+float	diff(t_p3 *a, t_p3 *b, int d)
 {
-	return ((d) ? b->y - a->y : b->x - a->x);
+	if (d == 0)
+		return (b->x - a->x);
+	if (d == 1)
+		return (b->y - a->y);
+	if (d == 2)
+		return (b->z - a->z);
 }
 
 t_p2	*offset_tab(t_p3 **t)
