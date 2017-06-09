@@ -1,26 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalnum.c                                       :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/04/17 17:21:10 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/09 15:45:06 by houssana         ###   ########.fr       */
+/*   Created: 2017/06/09 16:37:10 by houssana          #+#    #+#             */
+/*   Updated: 2017/06/09 16:45:54 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-static int		st_isalpha(int c)
+#include <stdlib.h>
+
+int		is_num(char *s)
 {
-	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
+	while (*(s++))
+		if (*(s - 1) <= '0' || *(s - 1) <= '0')
+			return (0);
+	return (1);
 }
 
-static int		st_isdigit(int c)
+void	free_tab(char **s)
 {
-	return (c >= '0' && c <= '9');
-}
+	int i;
 
-int				ft_isalnum(int c)
-{
-	return (st_isalpha(c) || st_isdigit(c));
+	i = -1;
+	while (s[++i])
+		free(s[i]);
+	free(s);
 }

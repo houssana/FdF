@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/06 13:44:49 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/06 15:49:18 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/09 15:40:45 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ float	diff(t_p3 *a, t_p3 *b, int d)
 		return (b->y - a->y);
 	if (d == 2)
 		return (b->z - a->z);
+	return (0);
 }
 
 t_p2	*offset_tab(t_p3 **t)

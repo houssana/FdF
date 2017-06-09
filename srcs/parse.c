@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/31 13:27:22 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/06 17:03:28 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/09 17:18:46 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,47 +43,50 @@ char		*ft_strjoin_free(char *s1, char *s2, int w)
 	return (s - i);
 }
 
+void	get_res(char **s, t_p2 *res)
+{
+	int		i;
+	int		j;
+	char	**tmp;
+
+	i = 0;
+	j = 0;
+	while (s[i])
+		i++;
+	tmp = ft_strsplit(s[0], ' ');
+	while (tmp[j])
+		j++;
+	free_tab(tmp);
+	res->x = j;
+	res->y = i;
+}
+
 t_p3	**parse(char *str, t_p2 *res)
 {
 	t_p3	**r;
 	char	**s;
 	char	**tmp;
-	int		i;
-	int		j;
-	int		k;
+	t_p3	*a;
 
-	i = 0;
-	j = 0;
-	k = 0;
+	if (!str)
+		return (NULL);
+	a = new_p3(0, 0, 0);
 	s = ft_strsplit(str, '\n');
-	while (s[i])
-		i++;
-	tmp = ft_strsplit(s[0], ' ');
-	while (tmp[j])
+	get_res(s, res);
+	r = (t_p3**)ft_memalloc(sizeof(t_p3*) * (res->x * res->y + 1));
+	a->x = -1;
+	while (s[++(a->x)])
 	{
-		free(tmp[j]);
-		j++;
+		tmp = ft_strsplit(s[a->x], ' ');
+		a->y = -1;
+		while (tmp[++(a->y)])
+				r[(a->z)++] = new_p3(a->y, a->x, atoi(tmp[a->y]));
+		if (a->y != res->x)
+			exit(0);
+		free_tab(tmp);
 	}
-	free(tmp);
-	res->x = j;
-	res->y = i;
-	r = (t_p3**)malloc(sizeof(t_p3*) * (i * j + 1));
-	i = -1;
-	while (s[++i])
-	{
-		tmp = ft_strsplit(s[i], ' ');
-		j = -1;
-		while (tmp[++j])
-		{
-			r[k++] = new_p3(j, i, atoi(tmp[j]));
-			free(tmp[j]);
-		}
-		free(tmp);
-		free(s[i]);
-	}
-	r[k] = NULL;
 	free(str);
-	free(s);
+	free_tab(s);
 	return (r);
 }
 
@@ -93,7 +96,8 @@ char	*to_str(char *f)
 	char	*line;
 	char	*r;
 
-	fd = open(f, O_RDONLY);
+	if ((fd = open(f, O_RDONLY)) == -1)
+		return (NULL);
 	r = ft_strnew(1);
 	while (get_next_line(fd, &line) > 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/31 13:34:05 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/06 16:09:49 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/09 16:45:23 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,6 @@ void	init_image(t_img *img);
 void	draw_img(t_ptr *ptr);	
 float	diff(t_p3 *a, t_p3 *b, int d);
 t_p2	*proj_iso(t_p3	**t, int s);
+int		is_num(char *s);
+void	free_tab(char **s);
 #endif

@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/10 13:52:42 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/06 17:00:01 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/09 17:19:05 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,18 @@ int		expose(void *param)
 
 void	init_ptr(t_ptr *p, char **argv)
 {
+	p->r = new_p2(0, 0);
+	if (!(p->t = parse(to_str(argv[1]), p->r)))
+	{
+		free(p->r);
+		free(p);
+		ft_putstr("invalid file\n");
+		exit(0);
+	}
 	p->i = ft_memalloc(sizeof(t_img));
 	p->i->bpp = malloc(sizeof(int));
 	p->i->sl = malloc(sizeof(int));
 	p->i->e = malloc(sizeof(int));
-	p->r = new_p2(0, 0);
-	p->t = parse(to_str(argv[1]), p->r);
 	p->m = mlx_init();
 	p->i->scl = 25;
 	p->sr = proj_iso(p->t, p->i->scl);
@@ -63,7 +69,7 @@ int		main(int argc, char **argv)
 {
 	int		i;
 	t_ptr	*p;
-	int		s;
+	float		s;
 
 	if (argc != 2)
 		return (0);
