@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/31 13:27:22 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/09 17:18:46 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/09 18:35:44 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ t_p3	**parse(char *str, t_p2 *res)
 		tmp = ft_strsplit(s[a->x], ' ');
 		a->y = -1;
 		while (tmp[++(a->y)])
-				r[(a->z)++] = new_p3(a->y, a->x, atoi(tmp[a->y]));
+				r[(a->z)++] = new_p3(a->y, a->x, ft_atoi(tmp[a->y]));
 		if (a->y != res->x)
 			exit(0);
 		free_tab(tmp);

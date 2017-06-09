@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/10 13:52:42 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/09 18:14:03 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/09 18:49:51 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,11 @@ void	free_ptr(t_ptr *p)
 	free(p->sr);
 	free(p->r);
 	while (p->t[++i])
-			free(p->t[i]);
-	free(p->t);
+		free(p->t[i]);
+	i = -1;
+//	while (p->col[++i])
+//		free(p->col[i]);
+	free(p->col);
 	free(p);
 }
 
@@ -86,10 +89,19 @@ void	init_ptr(t_ptr *p, char **argv)
 int		main(int argc, char **argv)
 {
 	t_ptr	*p;
+	int		i;
 
-	if (argc != 2)
+	if (argc == 1 || fmod((argc - 2), 3) != 0)
 		return (0);
 	p = (t_ptr*)malloc(sizeof(t_ptr));
+	p->col = ft_memalloc(sizeof(t_p3*) * (argc - 2) / 3);
+	i = 2;
+	while (argv[i])
+	{
+		p->col[(i - 2) / 3] = new_p3(ft_atoi(argv[i]), \
+				ft_atoi(argv[i + 1]), ft_atoi(argv[i + 2]));
+		i += 3;
+	}
 	init_ptr(p, argv);
 	mlx_key_hook(p->w, my_key_funct, p);
 	mlx_expose_hook(p->w, expose_hook, p);
