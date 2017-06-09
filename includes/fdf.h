@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/31 13:34:05 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/09 16:45:23 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/09 18:02:31 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct	s_pointeur
 	t_p3	**t;
 	t_p2	*r;
 	t_p2	*sr;
+	float	ws;
 }				t_ptr;
 t_p3			**parse(char *str, t_p2 *res);
 t_p2	*new_p2(int x, int y);
