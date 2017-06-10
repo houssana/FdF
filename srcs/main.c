@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/10 13:52:42 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/09 18:49:51 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/10 15:37:47 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,12 @@ void	free_ptr(t_ptr *p)
 	free(p->i);
 	free(p->sr);
 	free(p->r);
+	free(p->alt);
 	while (p->t[++i])
 		free(p->t[i]);
 	i = -1;
-//	while (p->col[++i])
-//		free(p->col[i]);
+	while (p->col[++i])
+		free(p->col[i]);
 	free(p->col);
 	free(p);
 }
@@ -65,7 +66,7 @@ int		expose_hook(t_ptr *p)
 
 void	init_ptr(t_ptr *p, char **argv)
 {
-	p->r = new_p2(0, 0);
+	p->r = new_p3(0, 0, 0);
 	if (!(p->t = parse(to_str(argv[1]), p->r)))
 	{
 		free(p->r);
@@ -73,6 +74,8 @@ void	init_ptr(t_ptr *p, char **argv)
 		ft_putstr("invalid file\n");
 		exit(0);
 	}
+	p->alt = new_p2(0, 0);
+	p->r->z = get_height(p->t, p->alt);
 	p->i = ft_memalloc(sizeof(t_img));
 	p->i->bpp = malloc(sizeof(int));
 	p->i->sl = malloc(sizeof(int));
@@ -94,11 +97,14 @@ int		main(int argc, char **argv)
 	if (argc == 1 || fmod((argc - 2), 3) != 0)
 		return (0);
 	p = (t_ptr*)malloc(sizeof(t_ptr));
-	p->col = ft_memalloc(sizeof(t_p3*) * (argc - 2) / 3);
+	p->nb_col = (argc - 2) / 3;
+	p->col = ft_memalloc(sizeof(t_p3*) * (p->nb_col + 2));
+	p->col[0] = new_p3(255, 255, 255);
+	p->col[p->nb_col + 1] = NULL;
 	i = 2;
 	while (argv[i])
 	{
-		p->col[(i - 2) / 3] = new_p3(ft_atoi(argv[i]), \
+		p->col[(i - 2) / 3 + 1] = new_p3(ft_atoi(argv[i]), \
 				ft_atoi(argv[i + 1]), ft_atoi(argv[i + 2]));
 		i += 3;
 	}

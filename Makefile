@@ -6,13 +6,13 @@
 #    By: houssana <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/06/06 16:26:13 by houssana          #+#    #+#              #
-#    Updated: 2017/06/09 16:41:16 by houssana         ###   ########.fr        #
+#    Updated: 2017/06/10 12:58:13 by houssana         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME =fdf
 SRC =srcs/
-INCL =-I includes/ -I libft/
+INCL =-I includes/ -I libft/ /usr/local/include/
 SRC_FILES ={main,parse,points,image,utils}
 
 all: $(NAME)

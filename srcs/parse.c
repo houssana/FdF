@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/31 13:27:22 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/09 18:35:44 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/10 13:47:36 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char		*ft_strjoin_free(char *s1, char *s2, int w)
 	return (s - i);
 }
 
-void	get_res(char **s, t_p2 *res)
+void	get_res(char **s, t_p3 *res)
 {
 	int		i;
 	int		j;
@@ -61,7 +61,7 @@ void	get_res(char **s, t_p2 *res)
 	res->y = i;
 }
 
-t_p3	**parse(char *str, t_p2 *res)
+t_p3	**parse(char *str, t_p3 *res)
 {
 	t_p3	**r;
 	char	**s;
