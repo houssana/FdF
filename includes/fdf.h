@@ -12,6 +12,11 @@
 
 #ifndef FDF_H
 # define FDF_H
+# define SCL 25
+# define MIN_WIDTH 320
+# define MIN_HEIGHT 240
+# define MAX_WIDTH 1080
+# define MAX_HEIGHT 720
 
 char			*ft_strjoin_free(char *s1, char *s2, int w);
 char			*to_str(char *f);

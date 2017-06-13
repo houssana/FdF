@@ -80,7 +80,7 @@ t_p3	**parse(char *str, t_p3 *res)
 		tmp = ft_strsplit(s[a->x], ' ');
 		a->y = -1;
 		while (tmp[++(a->y)])
-				r[(a->z)++] = new_p3(a->y, a->x, ft_atoi(tmp[a->y]));
+				r[((a->z)++)] = new_p3(a->y, a->x, ft_atoi(tmp[a->y]));
 		if (a->y != res->x)
 			exit(0);
 		free_tab(tmp);

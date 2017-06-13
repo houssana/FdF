@@ -58,12 +58,25 @@ int		expose_hook(t_ptr *p)
 {
 	float	s;
 
+	ft_putstr("hook\n");
 	s = (p->ws - 1) / 2;
 	draw_img(p);
 	mlx_put_image_to_window(p->m, p->w, p->i->i, s * p->sr->x, s * p->sr->y);
 	return (0);
 }
 
+int		scale(t_ptr *p)
+{
+	int		sc;
+
+	sc = SCL;
+	while (sc * p->r->x < MIN_WIDTH || sc * p->r->y < MIN_HEIGHT)
+		sc++;
+	while (sc * p->r->x > MAX_WIDTH || sc * p->r->y > MAX_HEIGHT)
+		if (--sc == 1)
+			break;
+	return (sc);
+}
 void	init_ptr(t_ptr *p, char **argv)
 {
 	p->r = new_p3(0, 0, 0);
@@ -81,7 +94,8 @@ void	init_ptr(t_ptr *p, char **argv)
 	p->i->sl = malloc(sizeof(int));
 	p->i->e = malloc(sizeof(int));
 	p->m = mlx_init();
-	p->i->scl = 25;
+	p->i->scl = scale(p);
+ft_putnbr(p->i->scl);
 	p->sr = proj_iso(p->t, p->i->scl);
 	p->ws = 1.2; 
 	p->w = mlx_new_window(p->m, p->sr->x * p->ws, p->sr->y * p->ws, "mlx 42");
@@ -109,6 +123,7 @@ int		main(int argc, char **argv)
 		i += 3;
 	}
 	init_ptr(p, argv);
+	ft_putstr("ok");
 	mlx_key_hook(p->w, my_key_funct, p);
 	mlx_expose_hook(p->w, expose_hook, p);
 	mlx_loop(p->m);
