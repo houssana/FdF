@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/06 13:44:49 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/09 15:40:45 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/13 15:51:51 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ float	diff(t_p3 *a, t_p3 *b, int d)
 
 t_p2	*offset_tab(t_p3 **t)
 {
-	int	x;
-	int	i;
+	int		x;
+	int		i;
 	t_p2	*min;
 	t_p2	*max;
 
@@ -74,7 +74,7 @@ t_p2	*offset_tab(t_p3 **t)
 	return (max);
 }
 
-t_p2	*proj_iso(t_p3	**t, int s)
+t_p2	*proj_iso(t_p3 **t, int s)
 {
 	int	x;
 	int	i;
@@ -84,8 +84,8 @@ t_p2	*proj_iso(t_p3	**t, int s)
 	{
 		x = t[i]->x;
 		t[i]->x = sqrt(2) / 2.0 * s * (t[i]->x - t[i]->y);
-		t[i]->y = -sqrt(2.0 / 3) * + \
-			s * t[i]->z + 1 / sqrt(6) * s *(x + t[i]->y);
+		t[i]->y = -sqrt(2.0 / 3) * +\
+			s * t[i]->z + 1 / sqrt(6) * s * (x + t[i]->y);
 	}
 	return (offset_tab(t));
 }

@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/31 13:34:05 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/10 14:18:20 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/13 15:57:06 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,16 @@ typedef struct	s_pointeur
 	t_p3	**col;
 	int		nb_col;
 }				t_ptr;
-t_p3	**parse(char *str, t_p3 *res);
-t_p2	*new_p2(int x, int y);
-t_p3	*new_p3(int x, int y, int z);
-void	init_image(t_img *img);	
-void	draw_img(t_ptr *ptr);	
-float	diff(t_p3 *a, t_p3 *b, int d);
-t_p2	*proj_iso(t_p3	**t, int s);
-int		is_num(char *s);
-void	free_tab(char **s);
-int		get_height(t_p3 **t, t_p2 *alt);
+t_p3			**parse(char *str, t_p3 *res);
+t_p2			*new_p2(int x, int y);
+t_p3			*new_p3(int x, int y, int z);
+void			init_image(t_img *img);
+void			draw_img(t_ptr *ptr);
+float			diff(t_p3 *a, t_p3 *b, int d);
+t_p2			*proj_iso(t_p3	**t, int s);
+int				is_num(char *s);
+void			free_tab(char **s);
+int				get_height(t_p3 **t, t_p2 *alt);
+int				my_key_funct(int keycode, void *param);
+int				expose_hook(t_ptr *p);
 #endif
