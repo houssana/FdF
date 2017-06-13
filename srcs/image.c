@@ -6,7 +6,7 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/13 15:27:24 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/13 16:03:03 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/13 17:24:55 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,6 @@ void	paint_pixel(t_ptr *p, t_p3 *a)
 	h = (int)fmin(h, p->nb_col - 2);
 	i = ((a->z - h / (p->nb_col - 1) * p->r->z)) / (p->r->z / (p->nb_col - 1));
 	addr = p->i->i_a + a->y * *(p->i->sl) + a->x * *(p->i->bpp) / 8;
-	if (*addr || *(addr + 1) || *(addr + 2))
-		if (abs(c2->x - *addr) < fabs(c1->x + (c2->x - c1->x) * i) \
-		|| abs(c2->y - *(addr + 1)) < fabs(c1->y + (c2->y - c1->y) * i) \
-		|| abs(c2->z - *(addr + 2)) < fabs(c1->z + (c2->z - c1->z) * i))
-			return ;
 	*(addr + 0) = c1->x + (c2->x - c1->x) * i;
 	*(addr + 1) = c1->y + (c2->y - c1->y) * i;
 	*(addr + 2) = c1->z + (c2->z - c1->z) * i;

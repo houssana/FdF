@@ -6,34 +6,46 @@
 /*   By: houssana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/13 15:15:52 by houssana          #+#    #+#             */
-/*   Updated: 2017/06/13 15:55:36 by houssana         ###   ########.fr       */
+/*   Updated: 2017/06/13 18:10:47 by houssana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mlx.h"
 #include "fdf.h"
+#include "libft.h"
 #include <stdlib.h>
 #include <stdio.h>
 
+void	free_if(void *ptr)
+{
+	if (ptr)
+		free(ptr);
+}
 void	free_ptr(t_ptr *p)
 {
 	int		i;
 
 	i = -1;
-	free(p->i->bpp);
-	free(p->i->sl);
-	free(p->i->e);
-	free(p->i);
-	free(p->sr);
-	free(p->r);
-	free(p->alt);
-	while (p->t[++i])
-		free(p->t[i]);
+	if (p->i)
+	{
+		free_if(p->i->bpp);
+		free_if(p->i->sl);
+		free_if(p->i->e);
+		free_if(p->i);
+	}
+	free_if(p->sr);
+	free_if(p->r);
+	free_if(p->alt);
+	if (p->t)
+		while (p->t[++i])
+			free_if(p->t[i]);
+	free_if(p->t);
 	i = -1;
-	while (p->col[++i])
-		free(p->col[i]);
-	free(p->col);
-	free(p);
+	if (p->col)
+		while (p->col[++i])
+			free_if(p->col[i]);
+	free_if(p->col);
+	free_if(p);
 }
 
 int		my_key_funct(int keycode, void *param)
